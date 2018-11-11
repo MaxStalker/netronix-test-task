@@ -1,0 +1,2 @@
+export const NEW_SERVER_DATA = 'NEW_SERVER_DATA';
+export const NEW_SENSOR_DATA = 'NEW_SENSOR_DATA';
