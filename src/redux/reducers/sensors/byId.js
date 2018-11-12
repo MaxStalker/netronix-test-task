@@ -10,20 +10,21 @@ import {
 } from './types';
 
 const HISTORY_SIZE = 50;
+export const PRECISION = 5;
 
-const formatSensorData = (pair: SensorValue, name: string): FormattedSensorValue => {
+export const formatSensorData = (pair: SensorValue, name: string): FormattedSensorValue => {
   const timestamp: number = pair[0] * 1000;
   const sensorValue: TupleValue = pair[1];
   const formattedTimestamp = new Date(timestamp).toISOString();
   let value: string | LocationFormattedValue = '';
   switch (name) {
     case 'Location': {
-    	if (Array.isArray(sensorValue)){
-				value = {
-					lat: sensorValue[0],
-					lon: sensorValue[1],
-				};
-			}
+      if (Array.isArray(sensorValue)) {
+        value = {
+          lat: sensorValue[0],
+          lon: sensorValue[1],
+        };
+      }
       break;
     }
     case 'Serial': {
@@ -34,7 +35,7 @@ const formatSensorData = (pair: SensorValue, name: string): FormattedSensorValue
     }
     default: {
       if (typeof sensorValue === 'number') {
-        value = sensorValue.toFixed(5);
+        value = sensorValue.toFixed(PRECISION);
       }
     }
   }
