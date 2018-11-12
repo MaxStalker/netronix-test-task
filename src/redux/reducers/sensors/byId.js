@@ -1,8 +1,17 @@
+// @flow
 import { NEW_SENSOR_DATA } from './actions';
+import {
+  type Action,
+  type SensorState,
+  type SensorValue,
+  type LocationValue,
+  type LocationFormattedValue,
+  type FormattedSensorValue,
+} from './types';
 
 const HISTORY_SIZE = 50;
 
-const formatSensorData = (pair, name) => {
+const formatSensorData = (pair: SensorValue, name: string): FormattedSensorValue => {
   const timestamp = pair[0] * 1000;
   const formattedTimestamp = new Date(timestamp).toISOString();
   let value = '';
@@ -29,7 +38,7 @@ const formatSensorData = (pair, name) => {
   };
 };
 
-export default (state = {}, action) => {
+export default (state: SensorState = {}, action: Action) => {
   switch (action.type) {
     case NEW_SENSOR_DATA: {
       const { _id, unit, ...rest } = action.payload;
