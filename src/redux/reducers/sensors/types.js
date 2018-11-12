@@ -1,15 +1,8 @@
 // @flow
-import { NEW_SENSOR_DATA } from './actions';
 
-export type TupleValue = number | [number, number];
-export type Tuples = [TupleValue, TupleValue];
-
-export type Action = NewSensorData;
-export type FloatValue = [number, number];
-export type LocationValue = [Tuples];
-export type LocationFormattedValue = { lat: string, lon: string };
-export type SerialValue = [number, string];
-export type SensorValue = [Tuples];
+export type TupleValue = [number, number] | number | string;
+export type LocationFormattedValue = { lat: number, lon: number };
+export type SensorValue = [number, TupleValue];
 export type FormattedSensorValue = {
   value: LocationFormattedValue | string,
   timestamp: number,
@@ -22,9 +15,11 @@ export type NewSensorData = {
     _id: string,
     name: string,
     measurements: [SensorValue],
-    unit: ?string,
+    unit?: string,
   },
 };
+
+export type Action = NewSensorData;
 
 export type InitState = {};
 export type NewState = {
@@ -32,5 +27,8 @@ export type NewState = {
   _id: string,
   measurements: [FormattedSensorValue],
   unit: ?string,
+  lastValue: FormattedSensorValue,
+  lastUpdate: number,
 };
+
 export type SensorState = InitState | NewState;

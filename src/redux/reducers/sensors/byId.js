@@ -4,31 +4,32 @@ import {
   type Action,
   type SensorState,
   type SensorValue,
-  type LocationValue,
-  type LocationFormattedValue,
+  type TupleValue,
   type FormattedSensorValue,
+  type LocationFormattedValue,
 } from './types';
 
 const HISTORY_SIZE = 50;
 
 const formatSensorData = (pair: SensorValue, name: string): FormattedSensorValue => {
-  const timestamp = pair[0] * 1000;
+  const timestamp: number = pair[0] * 1000;
+  const sensorValue: TupleValue = pair[1];
   const formattedTimestamp = new Date(timestamp).toISOString();
-  let value = '';
+  let value: string | LocationFormattedValue = '';
   switch (name) {
     case 'Location': {
       value = {
-        lat: pair[1][0],
-        lon: pair[1][1],
+        lat: sensorValue[0],
+        lon: sensorValue[1],
       };
       break;
     }
     case 'Serial': {
-      value = pair[1];
+      value = sensorValue;
       break;
     }
     default: {
-      value = pair[1].toFixed(5);
+      value = sensorValue.toFixed(5);
     }
   }
   return {
@@ -38,7 +39,7 @@ const formatSensorData = (pair: SensorValue, name: string): FormattedSensorValue
   };
 };
 
-export default (state: SensorState = {}, action: Action) => {
+export default (state: SensorState = {}, action: Action): SensorState => {
   switch (action.type) {
     case NEW_SENSOR_DATA: {
       const { _id, unit, ...rest } = action.payload;
