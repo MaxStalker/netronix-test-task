@@ -18,18 +18,24 @@ const formatSensorData = (pair: SensorValue, name: string): FormattedSensorValue
   let value: string | LocationFormattedValue = '';
   switch (name) {
     case 'Location': {
-      value = {
-        lat: sensorValue[0],
-        lon: sensorValue[1],
-      };
+    	if (Array.isArray(sensorValue)){
+				value = {
+					lat: sensorValue[0],
+					lon: sensorValue[1],
+				};
+			}
       break;
     }
     case 'Serial': {
-      value = sensorValue;
+      if (typeof sensorValue === 'string') {
+        value = sensorValue;
+      }
       break;
     }
     default: {
-      value = sensorValue.toFixed(5);
+      if (typeof sensorValue === 'number') {
+        value = sensorValue.toFixed(5);
+      }
     }
   }
   return {
