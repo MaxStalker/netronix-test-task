@@ -1,7 +1,7 @@
 [ignore]
 
 [include]
-.*/src/*
+./src
 
 [libs]
 
@@ -10,6 +10,3 @@
 [options]
 
 [strict]
-
-[untyped]
-.*/node_modules/
