@@ -1,25 +1,43 @@
+// @flow
 import { NEW_SENSOR_DATA } from './actions';
+import {
+  type Action,
+  type SensorState,
+  type SensorValue,
+  type TupleValue,
+  type FormattedSensorValue,
+  type LocationFormattedValue,
+} from './types';
+import { getLastItem } from '../../../helpers/utility';
 
 const HISTORY_SIZE = 50;
+export const PRECISION = 5;
 
-const formatSensorData = (pair, name) => {
-  const timestamp = pair[0] * 1000;
+export const formatSensorData = (pair: SensorValue, name: string): FormattedSensorValue => {
+  const timestamp: number = pair[0] * 1000;
+  const sensorValue: TupleValue = pair[1];
   const formattedTimestamp = new Date(timestamp).toISOString();
-  let value = '';
+  let value: string | LocationFormattedValue = '';
   switch (name) {
     case 'Location': {
-      value = {
-        lat: pair[1][0],
-        lon: pair[1][1],
-      };
+      if (Array.isArray(sensorValue)) {
+        value = {
+          lat: sensorValue[0],
+          lon: sensorValue[1],
+        };
+      }
       break;
     }
     case 'Serial': {
-      value = pair[1];
+      if (typeof sensorValue === 'string') {
+        value = sensorValue;
+      }
       break;
     }
     default: {
-      value = pair[1].toFixed(5);
+      if (typeof sensorValue === 'number') {
+        value = sensorValue.toFixed(PRECISION);
+      }
     }
   }
   return {
@@ -29,13 +47,13 @@ const formatSensorData = (pair, name) => {
   };
 };
 
-export default (state = {}, action) => {
+export default (state: SensorState = {}, action: Action): SensorState => {
   switch (action.type) {
     case NEW_SENSOR_DATA: {
       const { _id, unit, ...rest } = action.payload;
       const { name, measurements } = rest;
-      const lastTuple = measurements.slice(-1);
-      const lastValue = lastTuple.length > 0 ? lastTuple[0] : false;
+      const lastTuple = getLastItem(measurements);
+      const lastValue = lastTuple ? lastTuple : false;
       const prevMeasurements = state[_id] ? state[_id].measurements : [];
       const formattedMeasurements = measurements.map(pair => formatSensorData(pair, name));
       const oldLastValue =
