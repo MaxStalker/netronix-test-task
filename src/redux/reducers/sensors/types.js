@@ -32,3 +32,5 @@ export type NewState = {
 };
 
 export type SensorState = InitState | NewState;
+
+export type SensorListState = Array<string>
