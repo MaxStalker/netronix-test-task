@@ -8,6 +8,7 @@ import {
   type FormattedSensorValue,
   type LocationFormattedValue,
 } from './types';
+import { getLastItem } from '../../../helpers/utility';
 
 const HISTORY_SIZE = 50;
 export const PRECISION = 5;
@@ -51,8 +52,8 @@ export default (state: SensorState = {}, action: Action): SensorState => {
     case NEW_SENSOR_DATA: {
       const { _id, unit, ...rest } = action.payload;
       const { name, measurements } = rest;
-      const lastTuple = measurements.slice(-1);
-      const lastValue = lastTuple.length > 0 ? lastTuple[0] : false;
+      const lastTuple = getLastItem(measurements);
+      const lastValue = lastTuple ? lastTuple : false;
       const prevMeasurements = state[_id] ? state[_id].measurements : [];
       const formattedMeasurements = measurements.map(pair => formatSensorData(pair, name));
       const oldLastValue =
