@@ -1,8 +1,10 @@
 import { createSelector } from 'reselect';
 
-export const getId = (_, props) => props.id;
-export const getSensors = state => state.sensors.byId;
-export const getSensorsList = state => state.sensors.list;
+import { type SensorListState, type SensorState } from '../reducers/sensors/types';
+
+export const getId: () => string = (_, props) => props.id;
+export const getSensors: () => SensorState = state => state.sensors.byId;
+export const getSensorsList: () => SensorListState = state => state.sensors.list;
 
 export const getSensorById = createSelector([getSensors, getId], (sensors, id) => {
   if (!sensors[id]) {
